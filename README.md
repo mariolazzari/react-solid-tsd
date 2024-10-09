@@ -1,37 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Write Clean Code Like A Senior Dev: SOLID Principles In React.js
 
-## Getting Started
+YouTube [video](https://www.youtube.com/watch?v=gi-97EI7Sus)
 
-First, run the development server:
+## Single responsability
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Container / Presentien
+
+**Container**: state full component for data fetching
+
+```tsx
+"use client";
+
+import { User } from "@/types/User";
+import { UserProfile } from "../UserProfile";
+import { useFetchData } from "@/hooks/useFetchData";
+
+export function Users() {
+  const {
+    data = [],
+    loading,
+    error,
+  } = useFetchData<User[]>({
+    uri: "https://jsonplaceholder.typicode.com/users",
+    initilaData: [],
+  });
+
+  if (loading) {
+    return <h2>Loading users...</h2>;
+  }
+
+  if (error) {
+    return <h3>{error}</h3>;
+  }
+
+  return (
+    <div className="p-8">
+      <h1>Users: {data?.length ?? 0}</h1>
+
+      <div>
+        {data?.map(user => (
+          <UserProfile key={user.id} user={user} />
+        ))}
+      </div>
+    </div>
+  );
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Presentier**: state less component for rendering data passed via props
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```tsx
+"use clent";
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+import { UserProfileProps } from "./UserProfileProps";
 
-## Learn More
+export function UserProfile({ user }: UserProfileProps) {
+  return (
+    <div>
+      <h2>{user.username}</h2>
+    </div>
+  );
+}
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Cutom hooks
 
-## Deploy on Vercel
+Isolate application logic in dedicated custom hook
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```tsx
+import { useState, useEffect } from "react";
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# react-solid-tsd
+type FetchDataProps<T> = {
+  uri: string;
+  initilaData: T | null;
+};
+
+export function useFetchData<T>({ uri, initilaData }: FetchDataProps<T>) {
+  const [data, setData] = useState<T | null>(initilaData);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const refetch = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(uri);
+      const data: T = await res.json();
+      setData(data);
+      setError("");
+    } catch (ex: unknown) {
+      const error = ex instanceof Error ? ex.message : "Error fetching data";
+      setData(initilaData);
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    refetch();
+  }, [uri]);
+
+  return { data, error, loading, refetch };
+}
+```
