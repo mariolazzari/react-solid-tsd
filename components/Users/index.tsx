@@ -12,6 +12,7 @@ export function Users() {
   } = useFetchData<User[]>({
     uri: "https://jsonplaceholder.typicode.com/users",
     initilaData: [],
+    errorMessage: "Error fetching users",
   });
 
   if (loading) {
