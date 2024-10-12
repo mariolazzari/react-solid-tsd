@@ -4,7 +4,7 @@ YouTube [video](https://www.youtube.com/watch?v=gi-97EI7Sus)
 
 ## Single responsability
 
-### Container / Presentien
+### Container / Presentier
 
 **Container**: state full component for data fetching
 
@@ -103,5 +103,26 @@ export function useFetchData<T>({ uri, initilaData }: FetchDataProps<T>) {
   }, [uri]);
 
   return { data, error, loading, refetch };
+}
+```
+
+## Open-Closed 
+
+Components must be open to extension, closed to modification.
+
+
+```ts
+import { HTMLAttributes } from "react";
+
+export function Button({
+  children,
+  onClick, // custom behavoiur without altering component
+  ...props
+}: HTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button onClick={onClick} {...props}>
+      {children}
+    </button>
+  );
 }
 ```

@@ -14,7 +14,9 @@ function RootLayout({ children }: Layout) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <div className="p-8 flex flex-col gap-4 items-center justify-center">
+          {children}
+        </div>
       </body>
     </html>
   );
