@@ -153,3 +153,11 @@ export type UserProfileActionsProps = {
 };
 ```
 
+## Dependency inversion (injection)
+
+Pass dependency from outside (as argument)
+
+```ts
+
+```
+
