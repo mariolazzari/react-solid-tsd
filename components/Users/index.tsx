@@ -29,14 +29,9 @@ export function Users() {
     <>
       <h1 className="font-bold text-xl">Users: {data?.length ?? 0}</h1>
 
-      <Button
-        className="p-2 rounded-lg font-semibold bg-sky-700 text-white"
-        onClick={refetch}
-      >
-        Get users
-      </Button>
+      <Button onClick={refetch}>Get users</Button>
 
-      <div>
+      <div className="p-4 flex justify-center items-center flex-wrap gap-4">
         {data?.map(user => (
           <UserProfile key={user.id} user={user} />
         ))}

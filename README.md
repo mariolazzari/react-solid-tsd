@@ -126,3 +126,30 @@ export function Button({
   );
 }
 ```
+
+## Liskow substitution
+
+Composition over inheritance already complies this principle
+
+## Interface segregation
+
+No code should depend on unused code
+
+```ts
+// user details
+import { User } from "@/types/User";
+
+export type UserProfileProps = {
+  user: User;
+};
+```
+
+```ts
+// user actions
+import { MouseEventHandler } from "react";
+
+export type UserProfileActionsProps = {
+  onClick: MouseEventHandler<HTMLButtonElement>;
+};
+```
+

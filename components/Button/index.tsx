@@ -6,7 +6,11 @@ export function Button({
   ...props
 }: HTMLAttributes<HTMLButtonElement>) {
   return (
-    <button onClick={onClick} {...props}>
+    <button
+      className="p-2 rounded-lg font-semibold bg-sky-700 text-white"
+      onClick={onClick}
+      {...props}
+    >
       {children}
     </button>
   );
